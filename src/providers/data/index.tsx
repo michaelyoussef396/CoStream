@@ -1,7 +1,10 @@
 import { GraphQLClient } from "@refinedev/nestjs-query";
 import { fetchWrapper } from "./fetch-wrapper";
+import { createClient } from "graphql-ws";
 
+export const API_BASE_URL = "http://api.crm.refine.dev"
 export const API_URL = "http://api.crm.refine.dev"
+export const WS_URL =  "http://api.crm.refine.dev/graphql"
 
 export const client = new GraphQLClient(API_URL, {
     fetch: (url: string, options: RequestInit) => {
@@ -12,3 +15,18 @@ export const client = new GraphQLClient(API_URL, {
         }
     }
 })
+
+export const wsClient = typeof window !== "undefined"
+    ? createClient({
+        url: WS_URL,
+        connectionParams: () => {
+            const accessToken = localStorage.getItem("access_token");
+
+            return {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            }
+        },
+    })
+    : undefined
