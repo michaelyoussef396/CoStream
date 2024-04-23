@@ -1,5 +1,5 @@
 import { GraphQLClient } from "@refinedev/nestjs-query";
-import { promiseHooks } from "v8";
+import { fetchWrapper } from "./fetch-wrapper";
 
 export const API_URL = "http://api.crm.refine.dev"
 
@@ -8,7 +8,7 @@ export const client = new GraphQLClient(API_URL, {
         try {
             return fetchWrapper(url, options);
         } catch (error) {
-            return promiseHooks.reject(error as Error);
+            return Promise.reject(error as Error);
         }
     }
 })
